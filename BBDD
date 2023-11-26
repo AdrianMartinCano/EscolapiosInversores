@@ -1,0 +1,103 @@
+create database escolapios;
+use escolapios;
+
+-- Crear la tabla Clientes
+CREATE TABLE Clientes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    DNI VARCHAR(9),
+    numeroCuenta VARCHAR(20),
+    NumeroAcciones INT,
+    usuario VARCHAR(50),
+    contraseña VARCHAR(50),
+    esAdmin BOOLEAN,
+    UNIQUE KEY unique_esAdmin (esAdmin)
+);
+
+-- Crear la tabla Operador
+CREATE TABLE Operador (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    esAdmin BOOLEAN,
+    FOREIGN KEY (esAdmin) REFERENCES Clientes(esAdmin)
+);
+
+-- Crear la tabla Movimientos
+CREATE TABLE Movimientos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idCliente INT,
+    TipoMovimiento ENUM('ingreso', 'retirada'),
+    Fecha DATE,
+    Cantidad INT,
+    FOREIGN KEY (idCliente) REFERENCES Clientes(id)
+);
+
+-- Crear la tabla Cuenta
+CREATE TABLE Cuenta (
+    IdCuenta INT PRIMARY KEY AUTO_INCREMENT,
+    idCliente INT,
+    saldoDinero DECIMAL(10, 2),
+    saldoAccion DECIMAL(10,2),
+    FOREIGN KEY (idCliente) REFERENCES Clientes(id)
+);
+
+-- Crear la tabla Operacion
+CREATE TABLE Operacion (
+    idOperacion INT PRIMARY KEY AUTO_INCREMENT,
+    IdCliente INT,
+    idOperador INT,
+    TipoOperacion ENUM('compra', 'venta'),
+    FechaOperacion DATE,
+    CantidadAcciones INT,
+    ValorAccion DECIMAL(10, 2),
+    Monto DECIMAL(10, 2),
+    FOREIGN KEY (IdCliente) REFERENCES Clientes(id),
+    FOREIGN KEY (idOperador) REFERENCES Operador(id)
+);
+
+
+-- Crear el procedimiento
+DELIMITER //
+CREATE PROCEDURE RealizarOperacion(
+    IN p_IdCliente INT,
+    IN p_IdOperador INT,
+    IN p_TipoOperacion ENUM('compra', 'venta'),
+    IN p_FechaOperacion DATE,
+    IN p_CantidadAcciones INT,
+    IN p_ValorAccion DECIMAL(10, 2)
+)
+BEGIN
+    -- Calcular el monto
+    DECLARE p_Monto DECIMAL(10, 2);
+    SET p_Monto = p_CantidadAcciones * p_ValorAccion;
+
+    -- Registrar la operación en la tabla Operacion
+    INSERT INTO Operacion (IdCliente, idOperador, TipoOperacion, FechaOperacion, CantidadAcciones, ValorAccion, Monto)
+    VALUES (p_IdCliente, p_IdOperador, p_TipoOperacion, p_FechaOperacion, p_CantidadAcciones, p_ValorAccion, p_Monto);
+
+    -- Actualizar el saldo de acciones en la tabla Cuenta
+    IF p_TipoOperacion = 'compra' THEN
+        UPDATE Cuenta
+        SET saldoAccion = saldoAccion + p_Monto
+        WHERE idCliente = p_IdCliente;
+    ELSE
+        UPDATE Cuenta
+        SET saldoAccion = saldoAccion - p_Monto
+        WHERE idCliente = p_IdCliente;
+    END IF;
+
+    -- Actualizar el saldo de dinero en la tabla Cuenta
+    UPDATE Cuenta
+    SET saldoDinero = saldoDinero - p_Monto
+    WHERE idCliente = p_IdCliente;
+
+    -- Registrar el movimiento en la tabla Movimientos
+    IF p_TipoOperacion = 'compra' THEN
+        INSERT INTO Movimientos (idCliente, TipoMovimiento, Fecha, Cantidad)
+        VALUES (p_IdCliente, 'retirada', p_FechaOperacion, p_CantidadAcciones);
+    ELSE
+        INSERT INTO Movimientos (idCliente, TipoMovimiento, Fecha, Cantidad)
+        VALUES (p_IdCliente, 'ingreso', p_FechaOperacion, p_CantidadAcciones);
+    END IF;
+END //
+DELIMITER ;
