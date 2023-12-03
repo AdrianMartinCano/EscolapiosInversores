@@ -2,7 +2,7 @@ package Modelo.Conexion;
 
 import java.sql.*;
 
-public class ConexionLogin {
+public class Conexion {
 
     private String DB_URL;
     private String USER;
@@ -11,19 +11,23 @@ public class ConexionLogin {
 
     private Connection connection;
 
-    public ConexionLogin(String DB_URL, String USER, String PASS, String QUERY) {
+    public Conexion(String DB_URL, String USER, String PASS) {
         this.DB_URL = DB_URL;
         this.USER = USER;
         this.PASS = PASS;
-        this.QUERY = QUERY;
+        this.QUERY = "";
 
         try {
             // Inicializar la conexión en el constructor
             this.connection = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Conexión creada");
+          //  System.out.println("Conexión creada");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Connection getConnection() {
+        return this.connection;
     }
 
     public int validarUsuario(String usuario, String contraseña) {

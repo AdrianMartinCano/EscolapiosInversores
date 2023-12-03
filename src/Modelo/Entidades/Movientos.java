@@ -39,9 +39,7 @@ public class Movientos {
         this.idCliente = idCliente;
     }
 
-    public TipoMovimiento getTipoMovimiento() {
-        return tipoMovimiento;
-    }
+    public TipoMovimiento getTipoMovimiento() { return tipoMovimiento; }
 
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;

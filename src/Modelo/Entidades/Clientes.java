@@ -6,6 +6,7 @@ public class Clientes {
     private String nombre;
     private String apellido;
     private String DNI;
+    private String numeroCuenta;
     private int NumeroAcciones;
     private String usuario;
     private String contraseña;
@@ -75,17 +76,30 @@ public class Clientes {
         this.esAdmin = esAdmin;
     }
 
+    public String getNumeroCuenta() {
+        return numeroCuenta;
+    }
 
-    public Clientes(int id, String nombre, String apellido, String DNI, int numeroAcciones, String usuario, String contraseña, boolean esAdmin) {
+    public void setNumeroCuenta(String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
+    }
+
+    public Clientes() {
+    }
+    @Override
+    public String toString() {
+        return "Nombre: " + nombre + ", Apellido: " + apellido + ", DNI: " + DNI;
+    }
+
+    public Clientes(int id, String nombre, String apellido, String DNI, String numeroCuenta, int numeroAcciones, String usuario, String contraseña, boolean esAdmin) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.DNI = DNI;
-        NumeroAcciones = numeroAcciones;
+        this.numeroCuenta = numeroCuenta;
+        this.NumeroAcciones = numeroAcciones;
         this.usuario = usuario;
         this.contraseña = contraseña;
         this.esAdmin = esAdmin;
     }
-
-    public Clientes() {  }
 }

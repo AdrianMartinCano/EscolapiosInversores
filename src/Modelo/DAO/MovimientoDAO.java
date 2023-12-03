@@ -1,10 +1,11 @@
 package Modelo.DAO;
 
+import Modelo.Entidades.Movientos;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import Modelo.Entidades.Movientos;
 
 public class MovimientoDAO {
     private Connection conexion;

@@ -1,7 +1,6 @@
 package Vista;
 
-import Modelo.Conexion.ConexionLogin;
-
+import Modelo.Conexion.Conexion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,15 +11,16 @@ public class Login extends JFrame {
     private JTextField usuarioTextField;
     private JPasswordField contrasenaPasswordField;
 
-    private ConexionLogin conLogin;
+    private Conexion conexion;
 
     private static final String DB_URL = "jdbc:mysql://localhost/escolapios";
     private static final String USER = "root";
     private static final String PASS = "root";
-    private String QUERY = "SELECT * FROM Clientes";
+    private String QUERY = "SELECT * FROM clientes";
 
     public Login() {
-        conLogin = new ConexionLogin(DB_URL, USER, PASS, QUERY);
+        conexion = new Conexion(DB_URL, USER, PASS);
+        conexion.setQUERY(QUERY);
         // Configurar la ventana
         setTitle("Inicio de Sesión");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,14 +42,14 @@ public class Login extends JFrame {
         entrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (conLogin.validarUsuario(usuarioTextField.getText(), contrasenaPasswordField.getText())==0) {
+                if (conexion.validarUsuario(usuarioTextField.getText(), contrasenaPasswordField.getText())==0) {
                     JOptionPane.showMessageDialog(Login.this, "Te has logueado como administrador");
                     Login.this.dispose();
-                    conLogin.cerrarConexion();
+                    conexion.cerrarConexion();
                     AdminVista av = new AdminVista();
-                } else if(conLogin.validarUsuario(usuarioTextField.getText(), contrasenaPasswordField.getText())==1) {
+                } else if(conexion.validarUsuario(usuarioTextField.getText(), contrasenaPasswordField.getText())==1) {
                     JOptionPane.showMessageDialog(Login.this, "Bienvenido, " + usuarioTextField.getText());
-                    conLogin.cerrarConexion();
+                    conexion.cerrarConexion();
                     Login.this.dispose();
                 }
                 else {
