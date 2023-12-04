@@ -65,6 +65,12 @@ public class AdminVista extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Acciones al hacer clic en "Comprar acciones"
+
+                Clientes c = clienteSeleccionado;
+                clienteSeleccionado= clientesDAO.seleccionarCliente(c.getId());
+                if(clienteSeleccionado!=null){
+                    JOptionPane.showMessageDialog(AdminVista.this, "funciona");
+                }
             }
         });
 

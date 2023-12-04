@@ -3,6 +3,7 @@ package Modelo.DAO;
 import Modelo.Conexion.Conexion;
 import Modelo.Entidades.Clientes;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -52,5 +53,25 @@ public class ClientesDAO {
             e.getLocalizedMessage();
         }
         return listaClientes;
+    }
+
+    public Clientes seleccionarCliente(int id){
+        String sql = "select * from clientes where id = ?";
+        try (PreparedStatement statement = conexion.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+
+                Clientes c = new Clientes(resultSet.getInt("id"), resultSet.getString("nombre"),
+                        resultSet.getString("apellido"), resultSet.getString("DNI"), resultSet.getString("numeroCuenta"),
+                        resultSet.getInt("NumeroAcciones"), resultSet.getString("usuario"), resultSet.getString("contraseña"),
+                        false);
+                return c;
+            }
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }
