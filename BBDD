@@ -127,3 +127,10 @@ DELIMITER ;
   select * from operador;
 
   INSERT INTO Operador (idCliente)  SELECT id FROM Clientes WHERE esAdmin = true;
+
+INSERT INTO Empresas (nombreEmpresa, ticker) VALUES
+('Empresa1', 'EMP1'),
+('Empresa2', 'EMP2'),
+('Empresa3', 'EMP3'),
+('Empresa4', 'EMP4'),
+('Empresa5', 'EMP5');

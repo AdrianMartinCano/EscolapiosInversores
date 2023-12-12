@@ -2,7 +2,10 @@ package Vista;
 
 import Modelo.Conexion.Conexion;
 import Modelo.DAO.ClientesDAO;
+import Modelo.DAO.EmpresaDAO;
 import Modelo.Entidades.Clientes;
+import Modelo.Entidades.Empresas;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +20,10 @@ public class AdminVista extends JFrame {
 
     private ClientesDAO clientesDAO;
     private ArrayList<Clientes> listaClientes;
+
+    private EmpresaDAO empresaDAO;
+
+    private ArrayList<Empresas> listaEmpresas;
 
     // Variable para realizar un seguimiento del cliente seleccionado
     private Clientes clienteSeleccionado;
@@ -37,6 +44,8 @@ public class AdminVista extends JFrame {
         conexion = new Conexion(DB_URL, USER, PASS);
         clientesDAO = new ClientesDAO(conexion);
         listaClientes = clientesDAO.listaClientes();
+        empresaDAO = new EmpresaDAO(conexion);
+        listaEmpresas = empresaDAO.listaEmpresas();
 
         // Crear paneles
         JPanel panel = new JPanel(new GridLayout(5, 1, 10, 10));
@@ -58,8 +67,9 @@ public class AdminVista extends JFrame {
 
         // Etiqueta para mostrar el estado del cliente seleccionado
         estadoClienteLabel = new JLabel("Cliente no seleccionado");
-        estadoClienteLabel.setForeground(Color.RED);
-
+        //actualizarEstadoClienteLabel();
+        //estadoClienteLabel.setForeground(Color.RED);
+        actualizarEstadoClienteLabel();
         // Agregar acciones a los botones
         comprarButton.addActionListener(new ActionListener() {
             @Override
@@ -69,8 +79,12 @@ public class AdminVista extends JFrame {
                 Clientes c = clienteSeleccionado;
                 clienteSeleccionado= clientesDAO.seleccionarCliente(c.getId());
                 if(clienteSeleccionado!=null){
-                    JOptionPane.showMessageDialog(AdminVista.this, "funciona");
+
+                    VentaAccionesView ventaAccionesView = new VentaAccionesView(listaEmpresas, clienteSeleccionado);
+                    AdminVista.this.dispose();
+                    //JOptionPane.showMessageDialog(AdminVista.this, "Hay" + listaEmpresas.size() + " empresas");
                 }
+
             }
         });
 

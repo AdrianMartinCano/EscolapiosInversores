@@ -13,7 +13,6 @@ public class SeleccionClienteVista extends JFrame {
     private ArrayList<Clientes> listaClientes;
     private JList<Clientes> clientesJList;
     private JButton seleccionarButton;
-
     private Clientes clientes;
 
     public SeleccionClienteVista(ArrayList<Clientes> listaClientes, AdminVista adminVista) {

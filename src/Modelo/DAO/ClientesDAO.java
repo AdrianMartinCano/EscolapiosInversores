@@ -30,6 +30,29 @@ public class ClientesDAO {
         }
     }
 
+    public void actualizarAcciones(int id, int cantidad) {
+        String sql = "UPDATE clientes SET NumeroAcciones = NumeroAcciones + ? WHERE id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = conexion.getConnection().prepareStatement(sql);
+            statement.setInt(1, cantidad);
+            statement.setInt(2, id); // Suponiendo que 'id' es la clave primaria de la tabla
+            int filasAfectadas = statement.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Actualización exitosa. Filas afectadas: " + filasAfectadas);
+            } else {
+                System.out.println("No se actualizó ninguna fila. Puede que no haya una fila con el ID proporcionado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Imprime la pila de errores para obtener más información
+        }
+    }
+
+    public void cerrarConexion(){
+        conexion.cerrarConexion();
+    }
+
     public ArrayList<Clientes> listaClientes() {
         String sql = "select * from clientes";
         try {
@@ -68,7 +91,6 @@ public class ClientesDAO {
                         false);
                 return c;
             }
-            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
