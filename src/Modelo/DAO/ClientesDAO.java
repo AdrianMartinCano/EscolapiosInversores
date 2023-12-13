@@ -2,8 +2,6 @@ package Modelo.DAO;
 
 import Modelo.Conexion.Conexion;
 import Modelo.Entidades.Clientes;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 

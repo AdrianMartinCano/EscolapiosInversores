@@ -20,15 +20,11 @@ public class AdminVista extends JFrame {
 
     private ClientesDAO clientesDAO;
     private ArrayList<Clientes> listaClientes;
-
     private EmpresaDAO empresaDAO;
-
     private ArrayList<Empresas> listaEmpresas;
 
-    // Variable para realizar un seguimiento del cliente seleccionado
     private Clientes clienteSeleccionado;
 
-    // Etiqueta para mostrar el estado del cliente seleccionado
     private JLabel estadoClienteLabel;
 
     private Conexion conexion;
@@ -67,22 +63,16 @@ public class AdminVista extends JFrame {
 
         // Etiqueta para mostrar el estado del cliente seleccionado
         estadoClienteLabel = new JLabel("Cliente no seleccionado");
-        //actualizarEstadoClienteLabel();
-        //estadoClienteLabel.setForeground(Color.RED);
         actualizarEstadoClienteLabel();
         // Agregar acciones a los botones
         comprarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Acciones al hacer clic en "Comprar acciones"
-
                 Clientes c = clienteSeleccionado;
                 clienteSeleccionado= clientesDAO.seleccionarCliente(c.getId());
                 if(clienteSeleccionado!=null){
-
                     VentaAccionesView ventaAccionesView = new VentaAccionesView(listaEmpresas, clienteSeleccionado);
                     AdminVista.this.dispose();
-                    //JOptionPane.showMessageDialog(AdminVista.this, "Hay" + listaEmpresas.size() + " empresas");
                 }
 
             }

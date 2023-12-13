@@ -7,16 +7,14 @@ public class Conexion {
     private String DB_URL;
     private String USER;
     private String PASS;
-    private String QUERY;
-
+   // private String QUERY;
     private Connection connection;
 
     public Conexion(String DB_URL, String USER, String PASS) {
         this.DB_URL = DB_URL;
         this.USER = USER;
         this.PASS = PASS;
-        this.QUERY = "";
-
+        //this.QUERY = "";
         try {
             // Inicializar la conexión en el constructor
             this.connection = DriverManager.getConnection(DB_URL, USER, PASS);

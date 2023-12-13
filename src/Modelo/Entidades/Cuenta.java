@@ -43,9 +43,7 @@ public class Cuenta {
         this.saldoDinero = saldoDinero;
     }
 
-    public double getSaldoAccion() {
-        return saldoAccion;
-    }
+    public double getSaldoAccion() {return saldoAccion; }
 
     public void setSaldoAccion(double saldoAccion) {
         this.saldoAccion = saldoAccion;
