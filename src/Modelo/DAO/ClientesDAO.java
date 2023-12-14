@@ -36,20 +36,12 @@ public class ClientesDAO {
             statement.setInt(1, cantidad);
             statement.setInt(2, id); // Suponiendo que 'id' es la clave primaria de la tabla
             int filasAfectadas = statement.executeUpdate();
-
-            if (filasAfectadas > 0) {
-                System.out.println("Actualización exitosa. Filas afectadas: " + filasAfectadas);
-            } else {
-                System.out.println("No se actualizó ninguna fila. Puede que no haya una fila con el ID proporcionado.");
-            }
         } catch (SQLException e) {
             e.printStackTrace(); // Imprime la pila de errores para obtener más información
         }
     }
 
-    public void cerrarConexion(){
-        conexion.cerrarConexion();
-    }
+
 
     public ArrayList<Clientes> listaClientes() {
         String sql = "select * from clientes";
@@ -74,6 +66,24 @@ public class ClientesDAO {
             e.getLocalizedMessage();
         }
         return listaClientes;
+    }
+
+    public ArrayList<Clientes> clientesFiltados(int id){
+        String sql = "select * from clientes where id = ?";
+        try (PreparedStatement statement = conexion.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                Clientes c = new Clientes(resultSet.getInt("id"), resultSet.getString("nombre"),
+                        resultSet.getString("apellido"), resultSet.getString("DNI"), resultSet.getString("numeroCuenta"),
+                        resultSet.getInt("NumeroAcciones"), resultSet.getString("usuario"), resultSet.getString("contraseña"),
+                        false);
+                listaClientes.add(c);
+            }
+            return listaClientes;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Clientes seleccionarCliente(int id){

@@ -121,16 +121,53 @@ BEGIN
 END //
 
 DELIMITER ;
+drop table acciones;
+create table Acciones(
+id int auto_increment primary key,
+idCliente int,
+NombreCliente varchar(255),
+Apellido Varchar(255),
+numeroAcciones int,
+nombreEmpresa varchar(255),
+TipoOperacion ENUM("Compra", "Venta"));
 
 
+CREATE TABLE Transacciones (
+	id int AUTO_INCREMENT primary key,
+    idCliente INT,
+    NombreCliente VARCHAR(255),
+    Apellido VARCHAR(255),
+     TipoOperacion ENUM("Compra", "Venta"),
+    numeroAcciones INT,
+    nombreEmpresa VARCHAR(255)
 
-  select * from operador;
+);
 
+---------------
   INSERT INTO Operador (idCliente)  SELECT id FROM Clientes WHERE esAdmin = true;
-
-INSERT INTO Empresas (nombreEmpresa, ticker) VALUES
+  INSERT INTO Empresas (nombreEmpresa, ticker) VALUES
 ('Empresa1', 'EMP1'),
 ('Empresa2', 'EMP2'),
 ('Empresa3', 'EMP3'),
 ('Empresa4', 'EMP4'),
 ('Empresa5', 'EMP5');
+-- Insertar valores en la tabla Transacciones
+INSERT INTO Transacciones (idCliente, NombreCliente, Apellido, TipoOperacion, numeroAcciones, nombreEmpresa)
+VALUES
+    (1, 'Juan', 'Perez', 'Compra', 100, 'EmpresaA'),
+    (2, 'Maria', 'Gomez', 'Venta', 50, 'EmpresaB'),
+    (3, 'Carlos', 'Rodriguez', 'Compra', 75, 'EmpresaC');
+
+
+INSERT INTO Acciones (idCliente, NombreCliente, Apellido, numeroAcciones, nombreEmpresa)
+VALUES
+    (1, 'Juan', 'Perez', 100, 'EmpresaA'),
+    (1, 'Juan', 'Perez', 200, 'EmpresaB'),
+    (2, 'Maria', 'Gomez', 50, 'EmpresaB'),
+    (3, 'Carlos', 'Lopez', 75, 'EmpresaC');
+
+
+  select * from clientes;
+  select * from acciones;
+  select * from transacciones;
+
