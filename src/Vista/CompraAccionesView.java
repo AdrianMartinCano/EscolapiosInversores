@@ -90,7 +90,7 @@ public class CompraAccionesView extends JFrame {
                 JOptionPane.showMessageDialog(CompraAccionesView.this, "Se han comprado " + cantidad + " acciones de la empresa " + nombreEmpresa);
                 clientesDAO.actualizarAcciones(clientes.getId(),cantidad);
                 clientes.setNumeroAcciones(clientes.getNumeroAcciones()+getNumeroAcciones());
-                transaccionesDAO.actualizarTransaccionVenta(clientes, nombreEmpresa);
+                transaccionesDAO.actualizarTransaccionCompra(clientes, nombreEmpresa);
                 Clientes aux = new Clientes(clientes.getId(),
                         clientes.getNombre(),
                         clientes.getApellido(),
@@ -151,3 +151,4 @@ public class CompraAccionesView extends JFrame {
         return empresasJList.getSelectedValue();
     }
 }
+

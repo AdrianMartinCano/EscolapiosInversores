@@ -28,6 +28,19 @@ public class ClientesDAO {
         }
     }
 
+    public void restarAcciones(int id, int cantidad) {
+        String sql = "UPDATE clientes SET NumeroAcciones = NumeroAcciones - ? WHERE id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = conexion.getConnection().prepareStatement(sql);
+            statement.setInt(1, cantidad);
+            statement.setInt(2, id); // Suponiendo que 'id' es la clave primaria de la tabla
+            int filasAfectadas = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Imprime la pila de errores para obtener más información
+        }
+    }
+
     public void actualizarAcciones(int id, int cantidad) {
         String sql = "UPDATE clientes SET NumeroAcciones = NumeroAcciones + ? WHERE id = ?";
         PreparedStatement statement = null;

@@ -62,6 +62,10 @@ public class Acciones {
         this.nombreEmpresa = nombreEmpresa;
     }
 
+
+    public String toDatos(){
+        return "Nombre Empresa: " + nombreEmpresa + " Numero Acciones: " + numeroAcciones;
+    }
     @Override
     public String toString() {
         return "Acciones{" +

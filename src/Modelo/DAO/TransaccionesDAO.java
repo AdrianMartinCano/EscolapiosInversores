@@ -64,9 +64,35 @@ public class TransaccionesDAO {
             e.printStackTrace();
         }
 
-        System.out.println("Transacción realizada");
+
 
     }
+
+
+    public ArrayList<Transacciones> listaTransacciones(int id) {
+        String sql = "SELECT * FROM transacciones WHERE idCliente = ?";
+        try {
+            PreparedStatement preparedStatement = conexion.getConnection().prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Transacciones t = new Transacciones(
+                        rs.getInt("idCliente"),
+                        rs.getString("NombreCliente"),
+                        rs.getString("Apellido"),
+                        TipoOperacion.valueOf(rs.getString("TipoOperacion")),
+                        rs.getInt("numeroAcciones"),
+                        rs.getString("nombreEmpresa")
+                );
+                listaTransacciones.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaTransacciones;
+    }
+
+
     public void actualizarTransaccionVenta(Clientes c , String nombreEmpresa){
         String sql = "INSERT INTO Transacciones (idCliente, NombreCliente, Apellido, TipoOperacion, numeroAcciones, nombreEmpresa) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
@@ -84,7 +110,6 @@ public class TransaccionesDAO {
             e.printStackTrace();
         }
 
-        System.out.println("Transacción realizada");
 
     }
 }

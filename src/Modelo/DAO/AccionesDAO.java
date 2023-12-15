@@ -21,12 +21,44 @@ public class AccionesDAO {
     }
 
 
+
+
+    public ArrayList<Acciones> consultaAccionesCompra(int idCliente){
+        String consultaSQL = "SELECT idCliente, NombreCliente, Apellido, nombreEmpresa, "
+                + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones "
+                + "WHEN TipoOperacion = 'Venta' THEN -numeroAcciones ELSE 0 END) AS totalAcciones "
+                + "FROM Acciones "
+                + "WHERE idCliente = ? "
+                + "GROUP BY idCliente, NombreCliente, Apellido, nombreEmpresa";
+
+        try(PreparedStatement statement = conexion.getConnection().prepareStatement(consultaSQL)){
+            statement.setInt(1, idCliente);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                int idClienteResultado = resultSet.getInt("idCliente");
+                String nombreCliente = resultSet.getString("NombreCliente");
+                String apellido = resultSet.getString("Apellido");
+                String nombreEmpresaResultado = resultSet.getString("nombreEmpresa");
+                int totalAcciones = resultSet.getInt("totalAcciones");
+
+                Acciones a = new Acciones(
+                        idClienteResultado, nombreCliente, apellido, totalAcciones, nombreEmpresaResultado, totalAcciones
+                );
+                listaAcciones.add(a);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return listaAcciones;
+    }
+
     public ArrayList<Acciones> consultaAcciones(int idCliente){
         String consultaSQL = "SELECT idCliente, NombreCliente, Apellido, nombreEmpresa, "
                 + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas, "
                 + "SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas, "
                 + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE -numeroAcciones END) AS TotalAcciones "
-                + "FROM Acciones WHERE idCliente = ? GROUP BY idCliente, NombreCliente, Apellido, nombreEmpresa";
+                + "FROM Acciones WHERE idCliente = ? GROUP BY idCliente, NombreCliente, Apellido, nombreEmpresa "
+                + "ORDER BY  nombreEmpresa";
         try ( PreparedStatement statement = conexion.getConnection().prepareStatement(consultaSQL)) {
             statement.setInt(1, idCliente);
             ResultSet resultSet = statement.executeQuery();
@@ -43,7 +75,7 @@ public class AccionesDAO {
                         idClienteResultado, nombreCliente, apellido, accionesCompradas,nombreEmpresa,totalAcciones
                 );
                 listaAcciones.add(a);
-                // Hacer algo con los resultados, como imprimirlos
+
             }
         }catch (SQLException e){
             e.printStackTrace();
