@@ -21,6 +21,38 @@ public class AccionesDAO {
     }
 
 
+    public void consultaAcciones(int idCliente){
+        String consultaSQL = "SELECT idCliente, NombreCliente, Apellido, nombreEmpresa, "
+                + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas, "
+                + "SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas, "
+                + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE -numeroAcciones END) AS TotalAcciones "
+                + "FROM Acciones WHERE idCliente = ? GROUP BY idCliente, NombreCliente, Apellido, nombreEmpresa";
+        try ( PreparedStatement statement = conexion.getConnection().prepareStatement(consultaSQL)) {
+            statement.setInt(1, idCliente);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+               // int idClienteResultado = resultSet.getInt("idCliente");
+                String nombreCliente = resultSet.getString("NombreCliente");
+                String apellido = resultSet.getString("Apellido");
+                String nombreEmpresa = resultSet.getString("nombreEmpresa");
+                int accionesCompradas = resultSet.getInt("AccionesCompradas");
+                int accionesVendidas = resultSet.getInt("AccionesVendidas");
+                int totalAcciones = resultSet.getInt("TotalAcciones");
+
+                // Hacer algo con los resultados, como imprimirlos
+                System.out.println("NombreCliente: " + nombreCliente +
+                        ", Apellido: " + apellido +
+                        ", Empresa: " + nombreEmpresa +
+                        ", AccionesCompradas: " + accionesCompradas +
+                        ", AccionesVendidas: " + accionesVendidas +
+                        ", TotalAcciones: " + totalAcciones);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
     /*create table Acciones(
 id int auto_increment primary key,
 idCliente int,

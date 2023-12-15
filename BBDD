@@ -171,3 +171,17 @@ VALUES
   select * from acciones;
   select * from transacciones;
 
+----------------------------------
+
+ SELECT
+    idCliente,
+    NombreCliente,
+    Apellido,
+    nombreEmpresa,
+    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas,
+    SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas,
+    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE -numeroAcciones END) AS TotalAcciones
+FROM
+    Acciones
+GROUP BY
+    idCliente, NombreCliente, Apellido, nombreEmpresa;

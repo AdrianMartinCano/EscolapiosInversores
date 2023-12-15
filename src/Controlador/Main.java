@@ -12,16 +12,16 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-     Login l = new Login();
+    // Login l = new Login();
 
       String DB_URL = "jdbc:mysql://localhost/escolapios";
       String USER = "root";
       String PASS = "root";
-     // Conexion conexion = new Conexion(DB_URL, USER, PASS);
-       // AccionesDAO accionesDAO = new AccionesDAO(conexion);
+      Conexion conexion = new Conexion(DB_URL, USER, PASS);
+       AccionesDAO accionesDAO = new AccionesDAO(conexion);
         //System.out.println(accionesDAO.buscarAccionesPorID(5).size());
-        //Clientes c = new Clientes(1, "Juan", "Pérez", "AAAA", "AAAA", 10, "a", "a", false);
+       // Clientes c = new Clientes(1, "Juan", "Pérez", "AAAA", "AAAA", 10, "a", "a", false);
         //accionesDAO.agregarAcciones(c, "EmpresaZ");
-
+        accionesDAO.consultaAcciones(2);
     }
 }
