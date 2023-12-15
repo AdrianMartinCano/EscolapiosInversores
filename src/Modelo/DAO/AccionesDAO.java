@@ -21,7 +21,7 @@ public class AccionesDAO {
     }
 
 
-    public void consultaAcciones(int idCliente){
+    public ArrayList<Acciones> consultaAcciones(int idCliente){
         String consultaSQL = "SELECT idCliente, NombreCliente, Apellido, nombreEmpresa, "
                 + "SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas, "
                 + "SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas, "
@@ -31,7 +31,7 @@ public class AccionesDAO {
             statement.setInt(1, idCliente);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-               // int idClienteResultado = resultSet.getInt("idCliente");
+                int idClienteResultado = resultSet.getInt("idCliente");
                 String nombreCliente = resultSet.getString("NombreCliente");
                 String apellido = resultSet.getString("Apellido");
                 String nombreEmpresa = resultSet.getString("nombreEmpresa");
@@ -39,17 +39,16 @@ public class AccionesDAO {
                 int accionesVendidas = resultSet.getInt("AccionesVendidas");
                 int totalAcciones = resultSet.getInt("TotalAcciones");
 
+                Acciones a = new Acciones(
+                        idClienteResultado, nombreCliente, apellido, accionesCompradas,nombreEmpresa,totalAcciones
+                );
+                listaAcciones.add(a);
                 // Hacer algo con los resultados, como imprimirlos
-                System.out.println("NombreCliente: " + nombreCliente +
-                        ", Apellido: " + apellido +
-                        ", Empresa: " + nombreEmpresa +
-                        ", AccionesCompradas: " + accionesCompradas +
-                        ", AccionesVendidas: " + accionesVendidas +
-                        ", TotalAcciones: " + totalAcciones);
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
+        return  listaAcciones;
     }
 
 
@@ -62,9 +61,9 @@ numeroAcciones int,
 nombreEmpresaVarchar varchar(255));*/
 
 
-    public void agregarAcciones(Clientes c, String nombreEmpresa, TipoOperacion tipoOperacion){
-        String sql = "INSERT INTO Acciones (idCliente, NombreCliente, Apellido, numeroAcciones, nombreEmpresa, TipoOperacion) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+    public void agregarAcciones(Clientes c, String nombreEmpresa, TipoOperacion tipoOperacion, int numeroAcciones){
+        String sql = "INSERT INTO Acciones (idCliente, NombreCliente, Apellido, numeroAcciones, nombreEmpresa, TipoOperacion, totalAcciones) " +
+                "VALUES (?, ?, ?, ?, ?, ?,?)";
 
         try (PreparedStatement statement = conexion.getConnection().prepareStatement(sql)) {
             statement.setInt(1, c.getId());
@@ -73,6 +72,7 @@ nombreEmpresaVarchar varchar(255));*/
             statement.setInt(4, c.getNumeroAcciones());
             statement.setString(5, nombreEmpresa);
             statement.setString(6, tipoOperacion.toString());
+            statement.setInt(7, numeroAcciones);
 
             statement.executeUpdate();
 
@@ -92,7 +92,8 @@ nombreEmpresaVarchar varchar(255));*/
                         resultSet.getString("NombreCliente"),
                         resultSet.getString("Apellido"),
                         resultSet.getInt("numeroAcciones"),
-                        resultSet.getString("nombreEmpresa")
+                        resultSet.getString("nombreEmpresa"),
+                        resultSet.getInt("totalAcciones")
                 );
                 listaAcciones.add(a);
                 }

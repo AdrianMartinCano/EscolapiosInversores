@@ -2,29 +2,24 @@ package Modelo.Entidades;
 
 public class Acciones {
 
-    /*create table Acciones(
-id int auto_increment primary key,
-idCliente int,
-NombreCliente varchar(255),
-Apellido Varchar(255),
-numeroAcciones int,
-nombreEmpresaVarchar varchar(255));*/
-
     private int idCliente;
     private String Nombrecliente;
     private String Apellido;
     private int numeroAcciones;
     private String nombreEmpresa;
 
+    private int totalAcciones;
+
     public Acciones() {
     }
 
-    public Acciones(int idCliente, String nombrecliente, String apellido, int numeroAcciones, String nombreEmpresa) {
+    public Acciones(int idCliente, String Nombrecliente, String Apellido, int numeroAcciones, String nombreEmpresa, int totalAcciones) {
         this.idCliente = idCliente;
-        Nombrecliente = nombrecliente;
-        Apellido = apellido;
+        this.Nombrecliente = Nombrecliente;
+        this.Apellido = Apellido;
         this.numeroAcciones = numeroAcciones;
         this.nombreEmpresa = nombreEmpresa;
+        this.totalAcciones=totalAcciones;
     }
 
     public int getIdCliente() {

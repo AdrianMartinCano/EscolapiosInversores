@@ -86,14 +86,26 @@ public class AdminVista extends JFrame {
 
             }
         });
+        verMovimientosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Clientes c = clienteSeleccionado;
+                if(clienteSeleccionado!=null){
+                    clienteSeleccionado=clientesDAO.seleccionarCliente(c.getId());
+                 AccionesListaView accionesListaView = new AccionesListaView(clienteSeleccionado);
+                }else {
+                    JOptionPane.showMessageDialog(AdminVista.this, "Debes seleccinar un cliente");
+                }
+
+
+            }
+        });
 
         venderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Acciones al hacer clic en "Vender acciones"
-
-                VentaAccionesView ventaAccionesView = new VentaAccionesView(clienteSeleccionado);
-                AdminVista.this.dispose();
+                //AdminVista.this.dispose();
+                System.out.println("En consutruccion xd");
             }
         });
 
@@ -117,12 +129,7 @@ public class AdminVista extends JFrame {
             }
         });
 
-        verMovimientosButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(AdminVista.this, "Empresa" + nombreEmpresa);
-            }
-        });
+
 
         atrasButton.addActionListener(new ActionListener() {
             @Override

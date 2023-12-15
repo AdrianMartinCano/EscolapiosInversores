@@ -100,7 +100,7 @@ public class CompraAccionesView extends JFrame {
                         clientes.getUsuario(),
                         clientes.getContraseña(),
                         clientes.isEsAdmin());
-                accionesDAO.agregarAcciones(aux, nombreEmpresa, TipoOperacion.Compra);
+                accionesDAO.agregarAcciones(aux, nombreEmpresa, TipoOperacion.Compra, getNumeroAcciones());
             }
         });
 

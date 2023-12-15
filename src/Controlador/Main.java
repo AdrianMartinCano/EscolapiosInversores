@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-    // Login l = new Login();
+     Login l = new Login();
 
       String DB_URL = "jdbc:mysql://localhost/escolapios";
       String USER = "root";
@@ -22,6 +22,8 @@ public class Main {
         //System.out.println(accionesDAO.buscarAccionesPorID(5).size());
        // Clientes c = new Clientes(1, "Juan", "Pérez", "AAAA", "AAAA", 10, "a", "a", false);
         //accionesDAO.agregarAcciones(c, "EmpresaZ");
-        accionesDAO.consultaAcciones(2);
+
+        System.out.println(accionesDAO.consultaAcciones(2).size());
+
     }
 }

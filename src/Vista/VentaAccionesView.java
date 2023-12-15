@@ -73,7 +73,7 @@ public class VentaAccionesView extends JFrame {
 
     }
 
-    private void llenarLista(){
+    public void llenarLista(){
         listaClientes= clientesDAO.clientesFiltados(clientes.getId());
     }
 
