@@ -170,11 +170,11 @@ public class AdminVista extends JFrame {
             }
         });
 
-        JPanel atrasPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel atrasPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         atrasPanel.add(atrasButton);
 
         // Agregar el panel de "Atrás" al panel principal
-        panel.add(atrasPanel);
+        panel.add(atrasPanel, BorderLayout.SOUTH);
 
         // Agregar el panel principal a la ventana
         add(panel);
