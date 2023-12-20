@@ -15,68 +15,6 @@ CREATE TABLE Clientes (
     esAdmin BOOLEAN
 );
 
--- Crear la tabla Operador
-CREATE TABLE Operador (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    idCliente INT,
-    FOREIGN KEY (idCliente) REFERENCES Clientes(id)
-);
-
--- Crear la tabla Movimientos
-CREATE TABLE Movimientos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    idCliente INT,
-    TipoMovimiento ENUM("ingreso", "retirada"),
-    Fecha DATE,
-    Cantidad INT,
-    FOREIGN KEY (idCliente) REFERENCES Clientes(id)
-);
-
--- Crear la tabla Cuenta
-CREATE TABLE Cuenta (
-    IdCuenta INT AUTO_INCREMENT PRIMARY KEY,
-    idCliente INT,
-    saldoDinero DECIMAL(10, 2),
-    saldoAccion DECIMAL(10, 2),
-    FOREIGN KEY (idCliente) REFERENCES Clientes(id)
-);
-
--- Crear la tabla Empresas
-CREATE TABLE Empresas (
-    idEmpresa INT AUTO_INCREMENT PRIMARY KEY,
-    nombreEmpresa VARCHAR(255) NOT NULL,
-    ticker VARCHAR(10) NOT NULL
-);
-
--- Crear la tabla Operacion
-CREATE TABLE Operacion (
-    idOperacion INT AUTO_INCREMENT PRIMARY KEY,
-    IdCliente INT,
-    idOperador INT,
-    TipoOperacion ENUM("Compra", "Venta"),
-    FechaOperacion DATE,
-    CantidadAcciones INT,
-    ValorAccion DECIMAL(10, 2),
-    Monto DECIMAL(10, 2),
-    idEmpresa INT,
-    FOREIGN KEY (IdCliente) REFERENCES Clientes(id),
-    FOREIGN KEY (idOperador) REFERENCES Operador(id),
-    FOREIGN KEY (idEmpresa) REFERENCES Empresas(idEmpresa)
-);
-
--- Crear el procedimiento
-DELIMITER //
-
-CREATE PROCEDURE RealizarOperacion(
-    IN p_IdCliente INT,
-    IN p_IdOperador INT,
-    IN p_TipoOperacion ENUM('compra', 'venta'),
-    IN p_FechaOperacion DATE,
-    IN p_CantidadAcciones INT,
-    IN p_ValorAccion DECIMAL(10, 2),
-    IN p_IdEmpresa INT
-)
-
 
 create table Acciones(
 id int auto_increment primary key,
@@ -89,95 +27,6 @@ TipoOperacion ENUM("Compra", "Venta"),
 totalAcciones int
 );
 
-
-CREATE TABLE Transacciones (
-	id int AUTO_INCREMENT primary key,
-    idCliente INT,
-    NombreCliente VARCHAR(255),
-    Apellido VARCHAR(255),
-     TipoOperacion ENUM("Compra", "Venta"),
-    numeroAcciones INT,
-    nombreEmpresa VARCHAR(255)
-);
-
-
-  INSERT INTO Operador (idCliente)  SELECT id FROM Clientes WHERE esAdmin = true;
-  INSERT INTO Empresas (nombreEmpresa, ticker) VALUES
-('Empresa1', 'EMP1'),
-('Empresa2', 'EMP2'),
-('Empresa3', 'EMP3'),
-('Empresa4', 'EMP4'),
-('Empresa5', 'EMP5');
--- Insertar valores en la tabla Transacciones
-INSERT INTO Transacciones (idCliente, NombreCliente, Apellido, TipoOperacion, numeroAcciones, nombreEmpresa)
-VALUES
-    (1, 'Juan', 'Perez', 'Compra', 100, 'EmpresaA'),
-    (2, 'Maria', 'Gomez', 'Venta', 50, 'EmpresaB'),
-    (3, 'Carlos', 'Rodriguez', 'Compra', 75, 'EmpresaC');
-
-
-INSERT INTO Acciones (idCliente, NombreCliente, Apellido, numeroAcciones, nombreEmpresa)
-VALUES
-    (1, 'Juan', 'Perez', 100, 'EmpresaA'),
-    (1, 'Juan', 'Perez', 200, 'EmpresaB'),
-    (2, 'Maria', 'Gomez', 50, 'EmpresaB'),
-    (3, 'Carlos', 'Lopez', 75, 'EmpresaC');
-
-
-
-SELECT
-    idCliente,
-    NombreCliente,
-    Apellido,
-    nombreEmpresa,
-    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas,
-    SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas,
-    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE -numeroAcciones END) AS TotalAcciones
-FROM
-    Acciones
-WHERE
-    idCliente = ?
-GROUP BY
-    idCliente, NombreCliente, Apellido, nombreEmpresa
-ORDER BY
-    nombreEmpresa;
-
-
-
-
-
-
-
-
-
-
-
--------------------------------------------------------
-
-
-
-
-ESTA PARTE DE AQUÍ ABAJO NO SÉ SI VALE PARA ALGO
-
-
-
-------------------------------------------------------
--- Crear la base de datos
-CREATE DATABASE escolapios;
-USE escolapios;
-
--- Crear la tabla Clientes
-CREATE TABLE Clientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255),
-    apellido VARCHAR(255),
-    DNI VARCHAR(9),
-    numeroCuenta VARCHAR(20),
-    NumeroAcciones INT,
-    usuario VARCHAR(50),
-    contraseña VARCHAR(50),
-    esAdmin BOOLEAN
-);
 
 -- Crear la tabla Operador
 CREATE TABLE Operador (
@@ -228,63 +77,8 @@ CREATE TABLE Operacion (
     FOREIGN KEY (idEmpresa) REFERENCES Empresas(idEmpresa)
 );
 
--- Crear el procedimiento
-DELIMITER //
 
-CREATE PROCEDURE RealizarOperacion(
-    IN p_IdCliente INT,
-    IN p_IdOperador INT,
-    IN p_TipoOperacion ENUM('compra', 'venta'),
-    IN p_FechaOperacion DATE,
-    IN p_CantidadAcciones INT,
-    IN p_ValorAccion DECIMAL(10, 2),
-    IN p_IdEmpresa INT
-)
-BEGIN
-    DECLARE p_Monto DECIMAL(10, 2);
-    SET p_Monto = p_CantidadAcciones * p_ValorAccion;
 
-    -- Actualizar el número de acciones en la tabla Clientes
-    IF p_TipoOperacion = 'compra' THEN
-        UPDATE Clientes
-        SET NumeroAcciones = NumeroAcciones + p_CantidadAcciones
-        WHERE id = p_IdCliente;
-    ELSE
-        UPDATE Clientes
-        SET NumeroAcciones = NumeroAcciones - p_CantidadAcciones
-        WHERE id = p_IdCliente;
-    END IF;
-
-    INSERT INTO Operacion (IdCliente, idOperador, TipoOperacion, FechaOperacion, CantidadAcciones, ValorAccion, Monto, idEmpresa)
-    VALUES (p_IdCliente, p_IdOperador, p_TipoOperacion, p_FechaOperacion, p_CantidadAcciones, p_ValorAccion, p_Monto, p_IdEmpresa);
-
-    -- Actualizar el saldo de acciones en la tabla Cuenta
-    IF p_TipoOperacion = 'compra' THEN
-        UPDATE Cuenta
-        SET saldoAccion = saldoAccion + p_Monto
-        WHERE idCliente = p_IdCliente;
-    ELSE
-        UPDATE Cuenta
-        SET saldoAccion = saldoAccion - p_Monto
-        WHERE idCliente = p_IdCliente;
-    END IF;
-
-    -- Actualizar el saldo de dinero en la tabla Cuenta
-    UPDATE Cuenta
-    SET saldoDinero = saldoDinero - p_Monto
-    WHERE idCliente = p_IdCliente;
-
-    -- Registrar el movimiento en la tabla Movimientos
-    IF p_TipoOperacion = 'compra' THEN
-        INSERT INTO Movimientos (idCliente, TipoMovimiento, Fecha, Cantidad)
-        VALUES (p_IdCliente, 'retirada', p_FechaOperacion, p_CantidadAcciones);
-    ELSE
-        INSERT INTO Movimientos (idCliente, TipoMovimiento, Fecha, Cantidad)
-        VALUES (p_IdCliente, 'ingreso', p_FechaOperacion, p_CantidadAcciones);
-    END IF;
-END //
-
-DELIMITER ;
 
 
 create table Acciones(
@@ -299,7 +93,6 @@ totalAcciones int
 );
 
 
-
 CREATE TABLE Transacciones (
 	id int AUTO_INCREMENT primary key,
     idCliente INT,
@@ -308,48 +101,8 @@ CREATE TABLE Transacciones (
      TipoOperacion ENUM("Compra", "Venta"),
     numeroAcciones INT,
     nombreEmpresa VARCHAR(255)
-
 );
 
 
-  INSERT INTO Operador (idCliente)  SELECT id FROM Clientes WHERE esAdmin = true;
-  INSERT INTO Empresas (nombreEmpresa, ticker) VALUES
-('Empresa1', 'EMP1'),
-('Empresa2', 'EMP2'),
-('Empresa3', 'EMP3'),
-('Empresa4', 'EMP4'),
-('Empresa5', 'EMP5');
--- Insertar valores en la tabla Transacciones
-INSERT INTO Transacciones (idCliente, NombreCliente, Apellido, TipoOperacion, numeroAcciones, nombreEmpresa)
-VALUES
-    (1, 'Juan', 'Perez', 'Compra', 100, 'EmpresaA'),
-    (2, 'Maria', 'Gomez', 'Venta', 50, 'EmpresaB'),
-    (3, 'Carlos', 'Rodriguez', 'Compra', 75, 'EmpresaC');
 
 
-INSERT INTO Acciones (idCliente, NombreCliente, Apellido, numeroAcciones, nombreEmpresa)
-VALUES
-    (1, 'Juan', 'Perez', 100, 'EmpresaA'),
-    (1, 'Juan', 'Perez', 200, 'EmpresaB'),
-    (2, 'Maria', 'Gomez', 50, 'EmpresaB'),
-    (3, 'Carlos', 'Lopez', 75, 'EmpresaC');
-
-
-  select * from clientes;
-  select * from acciones;
-  select * from transacciones;
-
-
-
- SELECT
-    idCliente,
-    NombreCliente,
-    Apellido,
-    nombreEmpresa,
-    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE 0 END) AS AccionesCompradas,
-    SUM(CASE WHEN TipoOperacion = 'Venta' THEN numeroAcciones ELSE 0 END) AS AccionesVendidas,
-    SUM(CASE WHEN TipoOperacion = 'Compra' THEN numeroAcciones ELSE -numeroAcciones END) AS TotalAcciones
-FROM
-    Acciones
-GROUP BY
-    idCliente, NombreCliente, Apellido, nombreEmpresa;
