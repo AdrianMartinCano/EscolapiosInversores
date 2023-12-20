@@ -1,6 +1,4 @@
--- Crear la base de datos
-CREATE DATABASE escolapios;
-USE escolapios;
+
 
 -- Crear la tabla Clientes
 CREATE TABLE Clientes (
@@ -26,7 +24,6 @@ nombreEmpresa varchar(255),
 TipoOperacion ENUM("Compra", "Venta"),
 totalAcciones int
 );
-
 
 -- Crear la tabla Operador
 CREATE TABLE Operador (
@@ -75,21 +72,6 @@ CREATE TABLE Operacion (
     FOREIGN KEY (IdCliente) REFERENCES Clientes(id),
     FOREIGN KEY (idOperador) REFERENCES Operador(id),
     FOREIGN KEY (idEmpresa) REFERENCES Empresas(idEmpresa)
-);
-
-
-
-
-
-create table Acciones(
-id int auto_increment primary key,
-idCliente int,
-NombreCliente varchar(255),
-Apellido Varchar(255),
-numeroAcciones int,
-nombreEmpresa varchar(255),
-TipoOperacion ENUM("Compra", "Venta"),
-totalAcciones int
 );
 
 
